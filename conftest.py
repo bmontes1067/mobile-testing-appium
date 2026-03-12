@@ -1,14 +1,14 @@
 """
-conftest.py — fixtures de Appium para Android e iOS.
+conftest.py — Appium fixtures for Android and iOS.
 
-Cómo seleccionar plataforma al ejecutar:
-    pytest tests/android/          # sólo Android
-    pytest tests/ios/              # sólo iOS
-    pytest --platform android      # flag explícito
+How to select the platform:
+    pytest tests/android/          # Android only
+    pytest tests/ios/              # iOS only
+    pytest --platform android      # explicit flag
     pytest --platform ios
 
-El fixture `driver` arranca Appium, ejecuta el test y cierra la sesión.
-Si el test falla, se guarda un screenshot automáticamente en reports/screenshots/.
+The `driver` fixture starts Appium, runs the test, and closes the session.
+If a test fails, a screenshot is saved automatically to reports/screenshots/.
 """
 
 import pytest
@@ -21,18 +21,17 @@ def pytest_addoption(parser):
         "--platform",
         action="store",
         default="android",
-        help="Plataforma objetivo: android | ios",
+        help="Target platform: android | ios",
     )
 
 
 @pytest.fixture(scope="function")
 def driver(request):
     """
-    Fixture principal: crea el driver según la plataforma,
-    lo inyecta en el test y lo cierra al finalizar.
-    Hace screenshot automático en caso de fallo.
+    Main fixture: creates the driver for the given platform,
+    injects it into the test, and quits after the test completes.
+    Takes an automatic screenshot on failure.
     """
-    # La plataforma puede venir del flag --platform o del marker @pytest.mark.platform
     marker = request.node.get_closest_marker("platform")
     if marker:
         platform = marker.args[0]
@@ -42,7 +41,6 @@ def driver(request):
     d = DriverFactory.create(platform)
     yield d
 
-    # Teardown: screenshot si el test falló
     if request.node.rep_call.failed if hasattr(request.node, "rep_call") else False:
         take_screenshot(d, f"FAILED_{request.node.name}")
 
@@ -51,7 +49,7 @@ def driver(request):
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """Hook para exponer el resultado del test al fixture driver."""
+    """Hook to expose the test result to the driver fixture."""
     outcome = yield
     rep = outcome.get_result()
     setattr(item, f"rep_{rep.when}", rep)

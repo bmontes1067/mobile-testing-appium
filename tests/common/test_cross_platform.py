@@ -1,22 +1,20 @@
 """
-Tests cross-platform: el mismo test se ejecuta en Android e iOS.
-Se usa pytest.mark.parametrize con la plataforma.
+Cross-platform tests: the same test runs on both Android and iOS.
+Uses pytest.mark.parametrize with the platform parameter.
 
-Ejecución:
-    pytest tests/common/ --platform android   # solo Android
-    pytest tests/common/                      # ambas (necesita ambos emuladores)
+Run:
+    pytest tests/common/ --platform android   # Android only
+    pytest tests/common/                      # both (requires both emulators running)
 """
 
 import pytest
-
 
 PLATFORMS = ["android", "ios"]
 
 
 @pytest.mark.parametrize("platform", PLATFORMS)
 def test_login_cross_platform(platform, request):
-    """Login válido funciona igual en Android e iOS."""
-    # Pedimos el driver con la plataforma correcta
+    """Valid login works the same on Android and iOS."""
     driver = request.getfixturevalue("driver")
 
     if platform == "android":
@@ -30,12 +28,12 @@ def test_login_cross_platform(platform, request):
     catalog = CatalogPage(driver)
 
     login.login("standard_user", "secret_sauce")
-    assert catalog.is_loaded(), f"[{platform}] El catálogo no cargó"
+    assert catalog.is_loaded(), f"[{platform}] Catalog did not load after login"
 
 
 @pytest.mark.parametrize("platform", PLATFORMS)
 def test_error_message_cross_platform(platform, request):
-    """El mensaje de error de login es el mismo en ambas plataformas."""
+    """Error message on login failure is consistent across platforms."""
     driver = request.getfixturevalue("driver")
 
     if platform == "android":
@@ -47,4 +45,4 @@ def test_error_message_cross_platform(platform, request):
     login.login("wrong_user", "wrong_pass")
 
     error = login.get_error_message()
-    assert "do not match" in error, f"[{platform}] Error inesperado: {error}"
+    assert "do not match" in error, f"[{platform}] Unexpected error message: {error}"

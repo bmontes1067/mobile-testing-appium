@@ -1,4 +1,4 @@
-"""Tests de login — iOS."""
+"""Login tests — iOS."""
 
 import pytest
 from pages.ios.login_page import LoginPage
@@ -13,7 +13,7 @@ class TestLoginIOS:
         login = LoginPage(driver)
         catalog = CatalogPage(driver)
         login.login("standard_user", "secret_sauce")
-        assert catalog.is_loaded(), "El catálogo no cargó tras login válido en iOS"
+        assert catalog.is_loaded(), "Catalog did not load after valid login on iOS"
 
     def test_login_invalid_credentials(self, driver):
         login = LoginPage(driver)

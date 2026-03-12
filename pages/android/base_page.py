@@ -1,6 +1,4 @@
-"""
-BasePage Android: métodos comunes heredados por todas las páginas Android.
-"""
+"""Android BasePage: common methods inherited by all Android page objects."""
 
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support.ui import WebDriverWait

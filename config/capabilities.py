@@ -1,15 +1,14 @@
 """
-Desired Capabilities para Android e iOS.
+Desired Capabilities for Android and iOS.
 
-Cómo usarlas:
-  - Ajusta ANDROID_DEVICE_NAME con el nombre de tu emulador:
-      `adb devices` → copia el nombre que aparece
-  - Ajusta IOS_DEVICE_NAME con el nombre de tu simulador:
-      `xcrun simctl list devices` → copia el nombre exacto
-  - La APK/IPA se descarga automáticamente desde las URLs públicas
-    de Sauce Labs al primer `pytest` si no existe en apps/.
-  - APPIUM_HOST apunta a localhost:4723 por defecto (Appium 2.x).
-    Cámbialo a Sauce Labs / BrowserStack si usas cloud.
+How to configure:
+  - Set ANDROID_DEVICE_NAME to your emulator name:
+      `adb devices` → copy the name shown
+  - Set IOS_DEVICE_NAME to your simulator name:
+      `xcrun simctl list devices` → copy the exact name
+  - The APK/IPA is downloaded automatically from Sauce Labs public releases.
+  - APPIUM_HOST points to localhost:4723 by default (Appium 2.x).
+    Change it to Sauce Labs / BrowserStack for cloud execution.
 """
 
 import os
@@ -17,11 +16,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ─── Servidor Appium ──────────────────────────────────────────────────────────
+# ─── Appium server ────────────────────────────────────────────────────────────
 APPIUM_HOST = os.getenv("APPIUM_HOST", "http://127.0.0.1:4723")
 
-# ─── Rutas locales de la app ──────────────────────────────────────────────────
-# Las apps de demo de Sauce Labs son públicas y gratuitas:
+# ─── Local app paths ──────────────────────────────────────────────────────────
+# Sauce Labs demo apps are public and free:
 # https://github.com/saucelabs/my-demo-app-android
 # https://github.com/saucelabs/my-demo-app-ios
 ANDROID_APP_PATH = os.path.abspath(

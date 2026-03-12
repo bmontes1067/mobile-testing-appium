@@ -1,4 +1,4 @@
-"""Tests del catálogo — iOS."""
+"""Catalog tests — iOS."""
 
 import pytest
 from pages.ios.login_page import LoginPage

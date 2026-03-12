@@ -1,6 +1,4 @@
-"""
-CartPage Android — carrito de la compra.
-"""
+"""CartPage Android — shopping cart screen."""
 
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.android.base_page import BasePage
@@ -8,20 +6,19 @@ from pages.android.base_page import BasePage
 
 class CartPage(BasePage):
 
-    CART_TITLE       = (AppiumBy.XPATH, '//*[@text="Your Cart"]')
-    CART_ITEMS       = (AppiumBy.ACCESSIBILITY_ID, "test-Item")
-    ITEM_NAMES       = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="test-Item title"]')
-    REMOVE_BUTTON    = (AppiumBy.ACCESSIBILITY_ID, "test-REMOVE")
-    CHECKOUT_BUTTON  = (AppiumBy.ACCESSIBILITY_ID, "test-CHECKOUT")
-    CONTINUE_BTN     = (AppiumBy.ACCESSIBILITY_ID, "test-CONTINUE SHOPPING")
-    EMPTY_CART_MSG   = (AppiumBy.XPATH, '//*[@text="No Items"]')
+    CART_TITLE      = (AppiumBy.XPATH, '//*[@text="Your Cart"]')
+    CART_ITEMS      = (AppiumBy.ACCESSIBILITY_ID, "test-Item")
+    ITEM_NAMES      = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="test-Item title"]')
+    REMOVE_BUTTON   = (AppiumBy.ACCESSIBILITY_ID, "test-REMOVE")
+    CHECKOUT_BUTTON = (AppiumBy.ACCESSIBILITY_ID, "test-CHECKOUT")
+    CONTINUE_BTN    = (AppiumBy.ACCESSIBILITY_ID, "test-CONTINUE SHOPPING")
+    EMPTY_CART_MSG  = (AppiumBy.XPATH, '//*[@text="No Items"]')
 
     def is_loaded(self) -> bool:
         return self.is_visible(self.CART_TITLE)
 
     def get_item_count(self) -> int:
-        items = self.driver.find_elements(*self.CART_ITEMS)
-        return len(items)
+        return len(self.driver.find_elements(*self.CART_ITEMS))
 
     def get_item_names(self) -> list[str]:
         els = self.driver.find_elements(*self.ITEM_NAMES)

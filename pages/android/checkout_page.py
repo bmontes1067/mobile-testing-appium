@@ -1,6 +1,4 @@
-"""
-CheckoutPage Android — formulario de checkout.
-"""
+"""CheckoutPage Android — checkout form screen."""
 
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.android.base_page import BasePage
@@ -8,13 +6,13 @@ from pages.android.base_page import BasePage
 
 class CheckoutPage(BasePage):
 
-    FIRST_NAME_FIELD  = (AppiumBy.ACCESSIBILITY_ID, "test-First Name")
-    LAST_NAME_FIELD   = (AppiumBy.ACCESSIBILITY_ID, "test-Last Name")
-    ZIP_FIELD         = (AppiumBy.ACCESSIBILITY_ID, "test-Zip/Postal Code")
-    CONTINUE_BUTTON   = (AppiumBy.ACCESSIBILITY_ID, "test-CONTINUE")
-    FINISH_BUTTON     = (AppiumBy.ACCESSIBILITY_ID, "test-PLACE ORDER")
-    SUCCESS_TITLE     = (AppiumBy.XPATH, '//*[@text="Checkout Complete"]')
-    ERROR_MESSAGE     = (AppiumBy.XPATH, '//*[contains(@text, "required")]')
+    FIRST_NAME_FIELD = (AppiumBy.ACCESSIBILITY_ID, "test-First Name")
+    LAST_NAME_FIELD  = (AppiumBy.ACCESSIBILITY_ID, "test-Last Name")
+    ZIP_FIELD        = (AppiumBy.ACCESSIBILITY_ID, "test-Zip/Postal Code")
+    CONTINUE_BUTTON  = (AppiumBy.ACCESSIBILITY_ID, "test-CONTINUE")
+    FINISH_BUTTON    = (AppiumBy.ACCESSIBILITY_ID, "test-PLACE ORDER")
+    SUCCESS_TITLE    = (AppiumBy.XPATH, '//*[@text="Checkout Complete"]')
+    ERROR_MESSAGE    = (AppiumBy.XPATH, '//*[contains(@text, "required")]')
 
     def fill_form(self, first_name: str, last_name: str, zip_code: str):
         self.type_text(self.FIRST_NAME_FIELD, first_name)

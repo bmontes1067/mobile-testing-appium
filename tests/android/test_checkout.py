@@ -1,4 +1,4 @@
-"""Tests del flujo de checkout completo — Android."""
+"""Full checkout flow tests — Android."""
 
 import pytest
 from pages.android.login_page import LoginPage
@@ -11,7 +11,7 @@ pytestmark = pytest.mark.platform("android")
 
 @pytest.fixture(autouse=True)
 def setup(driver):
-    """Login + añadir producto + ir al carrito antes de cada test."""
+    """Login + add a product + go to cart before each test."""
     LoginPage(driver).login("standard_user", "secret_sauce")
     catalog = CatalogPage(driver)
     catalog.add_first_item_to_cart()
@@ -21,38 +21,35 @@ def setup(driver):
 class TestCheckoutAndroid:
 
     def test_cart_has_item(self, driver):
-        """El carrito tiene exactamente 1 producto."""
+        """Cart contains exactly one product."""
         cart = CartPage(driver)
         assert cart.is_loaded()
         assert cart.get_item_count() == 1
 
     def test_remove_item_from_cart(self, driver):
-        """Eliminar el producto deja el carrito vacío."""
+        """Removing the product leaves the cart empty."""
         cart = CartPage(driver)
         cart.remove_first_item()
         assert cart.is_empty()
 
     def test_checkout_complete_flow(self, driver):
-        """Flujo completo: carrito → formulario → order complete."""
+        """Full flow: cart → form → order complete screen."""
         cart = CartPage(driver)
         cart.tap_checkout()
 
         checkout = CheckoutPage(driver)
-        checkout.fill_form("Belén", "Montes", "41001")
+        checkout.fill_form("Belen", "Montes", "41001")
         checkout.tap_continue()
         checkout.tap_finish()
 
-        assert checkout.is_order_complete(), "La pantalla de confirmación no aparece"
+        assert checkout.is_order_complete(), "Order confirmation screen not shown"
 
     def test_checkout_empty_form(self, driver):
-        """Submit formulario vacío → error de campos requeridos."""
+        """Submitting an empty form shows required field errors."""
         cart = CartPage(driver)
         cart.tap_checkout()
 
         checkout = CheckoutPage(driver)
         checkout.tap_continue()
 
-        assert checkout.is_visible(
-            (pytest.importorskip("appium.webdriver.common.appiumby").AppiumBy.XPATH,
-             '//*[contains(@text, "required")]')
-        )
+        assert checkout.is_visible(checkout.ERROR_MESSAGE), "Required field error not shown"

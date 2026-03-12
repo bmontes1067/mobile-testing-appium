@@ -1,6 +1,5 @@
-"""BasePage iOS."""
+"""iOS BasePage: common methods inherited by all iOS page objects."""
 
-from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from utils.helpers import take_screenshot, swipe_ios

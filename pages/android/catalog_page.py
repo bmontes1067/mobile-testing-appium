@@ -1,6 +1,4 @@
-"""
-CatalogPage Android — pantalla principal de productos.
-"""
+"""CatalogPage Android — main products screen."""
 
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.android.base_page import BasePage
@@ -9,15 +7,13 @@ from pages.android.base_page import BasePage
 class CatalogPage(BasePage):
 
     # ─── Locators ─────────────────────────────────────────────────────────────
-    CATALOG_HEADER       = (AppiumBy.ACCESSIBILITY_ID, "test-PRODUCTS")
-    PRODUCT_NAMES        = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="test-Item title"]')
-    SORT_BUTTON          = (AppiumBy.ACCESSIBILITY_ID, "test-Modal Selector Button")
-    CART_BUTTON          = (AppiumBy.ACCESSIBILITY_ID, "test-Cart")
-    CART_BADGE           = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="test-Cart"]')
-    ADD_TO_CART_BUTTONS  = (AppiumBy.ACCESSIBILITY_ID, "test-ADD TO CART")
-    MENU_BUTTON          = (AppiumBy.ACCESSIBILITY_ID, "test-Menu")
+    CATALOG_HEADER      = (AppiumBy.ACCESSIBILITY_ID, "test-PRODUCTS")
+    PRODUCT_NAMES       = (AppiumBy.XPATH, '//android.widget.TextView[@content-desc="test-Item title"]')
+    SORT_BUTTON         = (AppiumBy.ACCESSIBILITY_ID, "test-Modal Selector Button")
+    CART_BUTTON         = (AppiumBy.ACCESSIBILITY_ID, "test-Cart")
+    ADD_TO_CART_BUTTONS = (AppiumBy.ACCESSIBILITY_ID, "test-ADD TO CART")
+    MENU_BUTTON         = (AppiumBy.ACCESSIBILITY_ID, "test-Menu")
 
-    # Sort options
     SORT_AZ   = (AppiumBy.XPATH, '//*[@text="Name (A to Z)"]')
     SORT_ZA   = (AppiumBy.XPATH, '//*[@text="Name (Z to A)"]')
     SORT_LOHI = (AppiumBy.XPATH, '//*[@text="Price (low to high)"]')
@@ -42,7 +38,7 @@ class CatalogPage(BasePage):
 
     def sort_by(self, option: str):
         """
-        Abre el modal de ordenación y selecciona la opción.
+        Opens the sort modal and selects the given option.
         option: "az" | "za" | "lohi" | "hilow"
         """
         self.tap_sort()
@@ -54,7 +50,7 @@ class CatalogPage(BasePage):
         }
         locator = mapping.get(option)
         if not locator:
-            raise ValueError(f"Opción de ordenación no válida: {option}")
+            raise ValueError(f"Invalid sort option: {option}")
         self.click(locator)
 
     def open_menu(self):

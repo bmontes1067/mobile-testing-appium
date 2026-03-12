@@ -1,4 +1,4 @@
-"""CatalogPage iOS."""
+"""CatalogPage iOS — main products screen."""
 
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.ios.base_page import BasePage

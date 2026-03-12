@@ -1,8 +1,8 @@
 """
-Tests de login — Android
-Credenciales válidas de My Demo App (Sauce Labs):
+Login tests — Android
+Valid credentials for My Demo App (Sauce Labs):
   - standard_user / secret_sauce
-  - locked_out_user / secret_sauce  (usuario bloqueado)
+  - locked_out_user / secret_sauce  (blocked user)
 """
 
 import pytest
@@ -15,16 +15,16 @@ pytestmark = pytest.mark.platform("android")
 class TestLoginAndroid:
 
     def test_login_valid_credentials(self, driver):
-        """Login con credenciales correctas → llega a catálogo."""
+        """Login with valid credentials navigates to the catalog."""
         login = LoginPage(driver)
         catalog = CatalogPage(driver)
 
         login.login("standard_user", "secret_sauce")
 
-        assert catalog.is_loaded(), "El catálogo no cargó tras login válido"
+        assert catalog.is_loaded(), "Catalog did not load after valid login"
 
     def test_login_invalid_password(self, driver):
-        """Password incorrecta → mensaje de error."""
+        """Wrong password shows an error message."""
         login = LoginPage(driver)
 
         login.login("standard_user", "wrong_password")
@@ -32,25 +32,25 @@ class TestLoginAndroid:
         assert "do not match" in login.get_error_message()
 
     def test_login_empty_username(self, driver):
-        """Sin username → error de campo requerido."""
+        """Empty username shows a required field error."""
         login = LoginPage(driver)
 
         login.enter_password("secret_sauce")
         login.tap_login()
 
-        assert login.is_username_error_shown(), "No aparece error de username vacío"
+        assert login.is_username_error_shown(), "Username required error not shown"
 
     def test_login_empty_password(self, driver):
-        """Sin password → error de campo requerido."""
+        """Empty password shows a required field error."""
         login = LoginPage(driver)
 
         login.enter_username("standard_user")
         login.tap_login()
 
-        assert login.is_password_error_shown(), "No aparece error de password vacío"
+        assert login.is_password_error_shown(), "Password required error not shown"
 
     def test_login_both_fields_empty(self, driver):
-        """Sin rellenar nada → errores de ambos campos."""
+        """Submitting empty form shows username error."""
         login = LoginPage(driver)
 
         login.tap_login()
@@ -58,7 +58,7 @@ class TestLoginAndroid:
         assert login.is_username_error_shown()
 
     def test_login_locked_user(self, driver):
-        """Usuario bloqueado → mensaje de error específico."""
+        """Locked out user sees an error message."""
         login = LoginPage(driver)
 
         login.login("locked_out_user", "secret_sauce")
@@ -67,7 +67,7 @@ class TestLoginAndroid:
         assert "locked out" in error.lower() or "do not match" in error.lower()
 
     def test_login_screenshot_on_error_state(self, driver):
-        """Verifica que el estado de error es visualmente correcto (screenshot)."""
+        """Verifies error state is captured correctly in a screenshot."""
         login = LoginPage(driver)
 
         login.login("bad_user", "bad_pass")

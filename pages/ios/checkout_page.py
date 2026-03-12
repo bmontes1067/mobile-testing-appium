@@ -1,4 +1,4 @@
-"""CheckoutPage iOS."""
+"""CheckoutPage iOS — checkout form screen."""
 
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.ios.base_page import BasePage

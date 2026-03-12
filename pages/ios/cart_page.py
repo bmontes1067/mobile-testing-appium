@@ -1,4 +1,4 @@
-"""CartPage iOS."""
+"""CartPage iOS — shopping cart screen."""
 
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.ios.base_page import BasePage
