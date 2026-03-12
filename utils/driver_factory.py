@@ -7,7 +7,8 @@ Uso típico (en conftest.py):
 """
 
 from appium import webdriver
-from appium.options import UiAutomator2Options, XCUITestOptions
+from appium.options.android import UiAutomator2Options
+from appium.options.ios import XCUITestOptions
 from config.capabilities import APPIUM_HOST, ANDROID_CAPS, IOS_CAPS
 
 
