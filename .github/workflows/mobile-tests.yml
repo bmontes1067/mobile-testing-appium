@@ -6,9 +6,13 @@ on:
   pull_request:
     branches: [main]
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
 
-  # ─── Validación rápida en cada push ───────────────────────────────────────
+  # ─── Lint & collect on every push ─────────────────────────────────────────
   validate:
     name: Lint & Collect
     runs-on: ubuntu-latest
@@ -20,22 +24,15 @@ jobs:
           python-version: "3.11"
 
       - name: Install deps
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt flake8
+        run: pip install -r requirements.txt flake8
 
       - name: Collect tests (dry run)
-        run: |
-          source venv/bin/activate
-          pytest --collect-only -q
+        run: pytest --collect-only -q
 
       - name: Lint
-        run: |
-          source venv/bin/activate
-          flake8 pages/ tests/ utils/ config/ --max-line-length=120 --ignore=E501,W503
+        run: flake8 pages/ tests/ utils/ config/ --max-line-length=120 --ignore=E501,W503
 
-  # ─── Tests Android en emulador ────────────────────────────────────────────
+  # ─── Android tests on emulator ────────────────────────────────────────────
   android:
     name: Android Tests
     runs-on: ubuntu-latest
@@ -49,10 +46,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Python deps
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Enable KVM
         run: |
@@ -61,26 +55,22 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: temurin
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v3
 
       - name: Install Appium
         run: |
           npm install -g appium
           appium driver install uiautomator2
-          appium &
+          appium --log-level error &
           sleep 5
 
       - name: Download APK
-        run: |
-          source venv/bin/activate
-          python scripts/download_apps.py --platform android
+        run: python scripts/download_apps.py --platform android
 
       - name: Start emulator and run tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -89,11 +79,10 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_6
-          script: |
-            source venv/bin/activate
-            pytest tests/android/ --platform android -v \
-              --html=reports/report-android.html \
-              --self-contained-html
+          script: >
+            pytest tests/android/ --platform android -v
+            --html=reports/report-android.html
+            --self-contained-html
 
       - name: Upload report
         if: always()
@@ -102,7 +91,7 @@ jobs:
           name: android-report
           path: reports/
 
-  # ─── Tests iOS en simulador ───────────────────────────────────────────────
+  # ─── iOS tests on simulator ───────────────────────────────────────────────
   ios:
     name: iOS Tests
     runs-on: macos-latest
@@ -116,25 +105,17 @@ jobs:
           python-version: "3.11"
 
       - name: Install Python deps
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Install Appium
         run: |
           npm install -g appium
           appium driver install xcuitest
-          appium &
+          appium --log-level error &
           sleep 5
 
       - name: Download iOS app
-        run: |
-          source venv/bin/activate
-          python scripts/download_apps.py --platform ios
-
-      - name: List available simulators
-        run: xcrun simctl list devices available | grep "iPhone"
+        run: python scripts/download_apps.py --platform ios
 
       - name: Boot simulator
         run: |
@@ -143,14 +124,13 @@ jobs:
           echo "SIMULATOR_UDID=$UDID" >> $GITHUB_ENV
 
       - name: Run iOS tests
-        run: |
-          source venv/bin/activate
-          pytest tests/ios/ --platform ios -v \
-            --html=reports/report-ios.html \
-            --self-contained-html
         env:
           IOS_DEVICE_NAME: iPhone 15
           IOS_PLATFORM_VERSION: "17.0"
+        run: >
+          pytest tests/ios/ --platform ios -v
+          --html=reports/report-ios.html
+          --self-contained-html
 
       - name: Upload report
         if: always()

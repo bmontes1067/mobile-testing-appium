@@ -1,7 +1,7 @@
 """
-DriverFactory: crea y devuelve un driver Appium según la plataforma.
+DriverFactory: creates and returns an Appium driver based on the platform.
 
-Uso típico (en conftest.py):
+Usage (in conftest.py):
     driver = DriverFactory.create("android")
     driver = DriverFactory.create("ios")
 """
@@ -20,26 +20,19 @@ class DriverFactory:
         Args:
             platform: "android" | "ios"
         Returns:
-            Instancia de webdriver.Remote lista para usar.
+            A webdriver.Remote instance ready to use.
         Raises:
-            ValueError: si la plataforma no es válida.
+            ValueError: if the platform is not supported.
         """
         platform = platform.lower()
 
         if platform == "android":
-            caps = ANDROID_CAPS
+            options = UiAutomator2Options().load_capabilities(ANDROID_CAPS)
         elif platform == "ios":
-            caps = IOS_CAPS
+            options = XCUITestOptions().load_capabilities(IOS_CAPS)
         else:
-            raise ValueError(f"Plataforma no soportada: '{platform}'. Usa 'android' o 'ios'.")
+            raise ValueError(f"Unsupported platform: '{platform}'. Use 'android' or 'ios'.")
 
-        options = AppiumOptions()
-        for key, value in caps.items():
-            options.set_capability(key, value)
-
-        driver = webdriver.Remote(
-            command_executor=APPIUM_HOST,
-            options=options,
-        )
+        driver = webdriver.Remote(command_executor=APPIUM_HOST, options=options)
         driver.implicitly_wait(10)
         return driver
